@@ -1,0 +1,122 @@
+html {
+ background-color:#fefefe
+}
+body {
+    font-family: 'Crimson Text', serif;
+ color:#454545;
+ font-size:16px;
+ margin:2em auto;
+ max-width:1000px;
+ padding:1em;
+ line-height:1.4;
+ text-align:justify;
+ margin-top: 7%;
+}
+.nav {
+
+}
+.container {
+    flex-direction: row;
+    display: flex;
+}
+#riddle-list {
+    font-family: 'Montserrat', sans-serif;
+    /* width: 30%; */
+}
+#riddle-list li {
+    /*  */
+    /* margin-top: -3px; */
+    border: 1px double #fefefe;
+    box-sizing: border-box;
+}
+#riddle-list a {
+    display:inline-block;
+    width: 100%;
+    padding: 4px;
+    padding-left: 1em;
+}
+#riddle-list li:hover {
+    cursor: zoom-in;
+    color: black;
+    /* background-color: #fefd; */
+    border: 1px double #32a1ce;
+}
+.current {
+    color: #D5AD36;
+}
+.complete {
+    /* text-decoration: line-through; */
+}
+.complete:before {
+    content: "\2714";
+}
+.wrong {
+    animation: blinker 1s linear 3;
+}
+
+@keyframes blinker {
+    50% {
+        opacity: 0;
+    }
+}
+#riddle-panel {
+    margin-left: 3%;
+}
+.title {
+    font-style: italic;
+}
+authors {
+    font-size: 14px;
+}
+authors span:last-child:before {
+    content: "&"
+}
+authors span:first-child:before {
+    /* Remove the & from last-child if first child */
+    content: ""
+}
+/* https://codepen.io/sevilayha/pen/IdGKH */
+input {
+    font-family: 'Crimson Text', serif;
+    font-size:16px;
+    display: block;
+    padding:10px 10px 10px 5px;
+    border:none;
+    border-bottom:1px solid #757575;
+}
+input:focus     { outline:none; }
+label          {
+    color:#999;
+    font-size:18px;
+    font-weight:normal;
+    position:absolute;
+    pointer-events:none;
+    left:5px;
+    top:10px;
+    transition:0.2s ease all;
+    -moz-transition:0.2s ease all;
+    -webkit-transition:0.2s ease all;
+}
+
+input:focus ~ label, input:valid ~ label    {
+    top:-20px;
+    font-size:14px;
+    color:#5264AE;
+}
+a {
+ color:#07a
+}
+a:visited {
+ color:#941352
+}
+p.st {
+ margin-top:-1em
+}
+ul {
+    list-style-type:none;
+}
+@media screen and (max-width:500px) {
+ body {
+  text-align:left
+ }
+}
