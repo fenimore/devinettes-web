@@ -7,6 +7,7 @@
     <meta name="description" content="classic riddles from devinettes">
     <meta name="author" content="Fenimore Love">
     <link rel="stylesheet" type="text/css" href="css/main.css">
+    <link rel="stylesheet" type="text/css" href="css/modal.css">
     <link href="https://fonts.googleapis.com/css?family=Crimson+Text|Montserrat" rel="stylesheet">
     <link rel="icon" href="../../favicon.ico">
     <title>Devinettes</title>
@@ -14,10 +15,10 @@
   <body>
 
     <div id="app">
-      <div class="container" v-if="!about" >
+      <div class="container">
+        <!-- Riddle List -->
         <div id="riddle-list">
           <ul>
-            <!-- Riddle List -->
             <li v-for="riddle in riddles" :key="riddle.shortname">
               <a v-on:click="setRiddle(riddle.shortname)" v-bind:class="{ complete: riddle.complete, current: riddle.current }">
                 {{ riddle.shortname }}
@@ -25,8 +26,8 @@
             </li>
             <ul>
         </div>
+        <!-- Riddle Panel -->
         <div id="riddle-panel">
-
           <!-- Riddle -->
           <p>
             <div v-for="line in current.lines">
@@ -56,9 +57,30 @@
             </authors>
           </credits>
         </div>
+        <span id="help" v-on:click="toggleHelp()">
+          (help)
+        </span>
+      </div>
+      <!-- The Modal -->
+      <div id="help-modal" class="modal" v-if="help" ref="helpModal">
+        <!-- Modal content -->
+        <div class="modal-content">
+          <span class="close" v-on:click="toggleHelp()">&times;</span>
+          <h2>Devinettes</h2>
+          <p>
+            Type your answer and press Enter to submit your riddle answers.
+          </p>
+          <p>
+            If you're correct, the answer will disappear, and a check will apear next to the riddle title.
+          </p>
+          <p>
+            Individual riddle answers and hints are priced at a riddle by riddle basis. For more information, please contact the riddlers at: exorable.ludos+devinettes(at)gmail.com.
+          </p>
+        </div>
       </div>
     </div>
-
+    <!--
+    -->
     <footer class="footer">
       <div class="container">
       </div>
@@ -68,12 +90,17 @@
     <script type="text/javascript">
      var vm = new Vue({
          el: '#app',
+         mounted: function () {
+             document.addEventListener('click', this.closeModal)
+         },
+         beforeDestroy: function () {
+             document.removeEventListener('click', this.closeModal)
+         },
          data: {
              riddles: [],
              current: {"lines": []},
-             about: false,
+             help: false,
              wrong: false,
-             filter: "all",
              guess: "",
          },
          created: function () {
@@ -87,14 +114,24 @@
              });
          },
          methods: {
-             submitGuess: function(g, c) {
+             submitGuess: async function(g, c) {
                  console.log("Making Guess " + g + " (sha1): " + sha1(g));
-                 this.wrong = false;
+                 if (this.guess === "") return;
+                 // sha1 is this js implemenation of sha1 (see imports)
                  if(c.answers.includes(sha1(g))) {
                      c.complete = true;
+                     this.guess = "";
                  } else {
-
                      this.wrong = true;
+                     // So, javascript is single threaded --
+                     // and this async function _doesn't_ need
+                     // mutexes to access shared state of
+                     // the Vue app. (:grimace:) If it does I don't care?care
+                     await this.sleep(500);
+                     // I need to wait here because otherwise
+                     // the CSS class needs time to activate
+                     // (which blinks when something is wrong)
+                     this.wrong = false;
                  }
              },
              setRiddle: function(n) {
@@ -124,6 +161,17 @@
                      idx = idx + 1;
                  }
                  this.setRiddle(this.riddles[idx].shortname);
+             },
+             sleep: function(ms) {
+                 return new Promise(resolve => setTimeout(resolve, ms));
+             },
+             toggleHelp: function() {
+                 this.help = !this.help;
+             },
+             closeModal: function(event) {
+                 if (this.$refs.helpModal !== undefined && event.target === this.$refs.helpModal) {
+                     this.toggleHelp()
+                 }
              }
          }
      });

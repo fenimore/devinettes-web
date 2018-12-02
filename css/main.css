@@ -19,6 +19,10 @@ body {
     flex-direction: row;
     display: flex;
 }
+#help {
+    cursor: help;
+    margin-left: auto;
+}
 #riddle-list {
     font-family: 'Montserrat', sans-serif;
     /* width: 30%; */
